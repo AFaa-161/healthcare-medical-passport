@@ -11,10 +11,10 @@ An AI-Assisted Emergency Medical Information and Healthcare Resource Discovery p
 
 ## 🛠️ Tech Stack
 
-* Frontend: [Add your technology]
-* Backend: [Add your technology]
-* Database: [Add your technology]
-* AI: [Add your AI model/API]
+* Frontend: React + Vite
+* Backend: Node.js and Express APIs
+* Database: PostgreSQL
+* AI: OpenAI
 
 ## 🎯 Objective
 
