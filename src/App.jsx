@@ -1,0 +1,234 @@
+import { useState, useEffect } from "react";
+
+import Home from "./home";
+import Login from "./Login";
+import Dashboard from "./Dashboard";
+import HealthProfile from "./HealthProfile";
+import EmergencyPassport from "./EmergencyPassport";
+import DoctorEmergencyAccess from "./DoctorEmergencyAccess";
+import MedicalRecords from "./MedicalRecords";
+import Prescriptions from "./Prescriptions";
+import Appointments from "./Appointments";
+import AIAssistant from "./AIAssistant";
+import HealthcareResources from "./HealthcareResources";
+
+function App() {
+  // ================= CURRENT PAGE =================
+  // If emergency_token is present in the URL,
+  // directly open Doctor Emergency Access.
+  const [page, setPage] = useState(() => {
+    const params = new URLSearchParams(window.location.search);
+
+    return params.get("emergency_token")
+      ? "doctor-emergency-access"
+      : "home";
+  });
+
+  // ================= QR TOKEN =================
+  const [qrToken, setQrToken] = useState("");
+
+  // ================= READ QR TOKEN FROM URL =================
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+
+    const emergencyToken = params.get("emergency_token");
+
+    if (emergencyToken) {
+      const cleanedToken = emergencyToken
+        .trim()
+        .toUpperCase();
+
+      setQrToken(cleanedToken);
+
+      // Remove token from visible URL
+      // after reading it.
+      window.history.replaceState(
+        {},
+        document.title,
+        window.location.pathname
+      );
+    }
+  }, []);
+
+  // ================= REMEMBER CURRENT PAGE =================
+  useEffect(() => {
+    localStorage.setItem("currentPage", page);
+  }, [page]);
+
+  // ================= MEDICAL RECORDS =================
+  const [medicalRecords, setMedicalRecords] = useState([]);
+
+  // ================= PRESCRIPTIONS =================
+  const [prescriptions, setPrescriptions] = useState([]);
+
+  // ================= APPOINTMENTS =================
+  const [appointments, setAppointments] = useState([]);
+
+  // ================= HEALTH PROFILE =================
+  const [healthData, setHealthData] = useState({
+    fullName: "",
+    dateOfBirth: "",
+    gender: "",
+    phone: "",
+    email: "",
+    address: "",
+
+    bloodGroup: "",
+    height: "",
+    weight: "",
+    allergies: "",
+
+    medicalConditions: "",
+    currentMedications: "",
+
+    emergencyContactName: "",
+    relationship: "",
+    emergencyPhone: "",
+  });
+
+  return (
+    <>
+      {/* ================= HOME PAGE ================= */}
+      {page === "home" && (
+        <Home
+          onGetStarted={() => setPage("login")}
+          onLogin={() => setPage("login")}
+        />
+      )}
+
+      {/* ================= LOGIN PAGE ================= */}
+      {page === "login" && (
+        <Login
+          onLogin={() => setPage("dashboard")}
+        />
+      )}
+
+      {/* ================= DASHBOARD ================= */}
+      {page === "dashboard" && (
+        <Dashboard
+          onHealthProfile={() =>
+            setPage("health-profile")
+          }
+
+          onEmergencyPassport={() =>
+            setPage("emergency-passport")
+          }
+
+          onMedicalRecords={() =>
+            setPage("medical-records")
+          }
+
+          onPrescriptions={() =>
+            setPage("prescriptions")
+          }
+
+          onAppointments={() =>
+            setPage("appointments")
+          }
+
+          onAIAssistant={() =>
+            setPage("ai-assistant")
+          }
+
+          onHealthcareResources={() =>
+            setPage("healthcare-resources")
+          }
+
+          onDoctorEmergencyAccess={() =>
+            setPage("doctor-emergency-access")
+          }
+
+          medicalRecords={medicalRecords}
+          prescriptions={prescriptions}
+          appointments={appointments}
+          healthData={healthData}
+        />
+      )}
+
+      {/* ================= HEALTH PROFILE ================= */}
+      {page === "health-profile" && (
+        <HealthProfile
+          onBack={() =>
+            setPage("dashboard")
+          }
+
+          healthData={healthData}
+          setHealthData={setHealthData}
+        />
+      )}
+
+      {/* ================= EMERGENCY PASSPORT ================= */}
+      {page === "emergency-passport" && (
+        <EmergencyPassport
+          onBack={() =>
+            setPage("dashboard")
+          }
+
+          healthData={healthData}
+          setHealthData={setHealthData}
+        />
+      )}
+
+      {/* ================= DOCTOR EMERGENCY ACCESS ================= */}
+      {page === "doctor-emergency-access" && (
+        <DoctorEmergencyAccess
+          onBack={() =>
+            setPage("dashboard")
+          }
+
+          qrToken={qrToken}
+        />
+      )}
+
+      {/* ================= MEDICAL RECORDS ================= */}
+      {page === "medical-records" && (
+        <MedicalRecords
+          onBack={() =>
+            setPage("dashboard")
+          }
+
+          records={medicalRecords}
+          setRecords={setMedicalRecords}
+        />
+      )}
+
+      {/* ================= PRESCRIPTIONS ================= */}
+      {page === "prescriptions" && (
+        <Prescriptions
+          onBack={() =>
+            setPage("dashboard")
+          }
+        />
+      )}
+
+      {/* ================= APPOINTMENTS ================= */}
+      {page === "appointments" && (
+        <Appointments
+          onBack={() =>
+            setPage("dashboard")
+          }
+        />
+      )}
+
+      {/* ================= AI ASSISTANT ================= */}
+      {page === "ai-assistant" && (
+        <AIAssistant
+          onBack={() =>
+            setPage("dashboard")
+          }
+        />
+      )}
+
+      {/* ================= HEALTHCARE RESOURCES ================= */}
+      {page === "healthcare-resources" && (
+        <HealthcareResources
+          onBack={() =>
+            setPage("dashboard")
+          }
+        />
+      )}
+    </>
+  );
+}
+
+export default App;
